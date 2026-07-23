@@ -1,0 +1,41 @@
+CREATE DATABASE DB_DEV;
+CREATE SCHEMA DB_DEV.RAW;
+
+
+----- CREATE STAGE
+CREATE OR REPLACE STAGE DB_DEV.RAW.STAGE_CUSTOMERS;
+
+
+----- CONFIRM THAT THE FILE WAS UPLOADED INTO THE STAGE
+LIST @DB_DEV.RAW.STAGE_CUSTOMERS;
+
+---- Create the table in snowflake
+CREATE OR REPLACE TABLE DB_DEV.RAW.CUSTOMERS (
+    index INTEGER,
+    customer_id VARCHAR,
+    first_name VARCHAR,
+    last_name VARCHAR,
+    company VARCHAR,
+    city VARCHAR,
+    country VARCHAR,
+    phone_1 VARCHAR,
+    phone_2 VARCHAR,
+    email VARCHAR,
+    subscription_date VARCHAR,
+    website VARCHAR
+);
+
+---- Execute COPY INTO 
+COPY INTO DB_DEV.RAW.CUSTOMERS
+FROM @DB_DEV.RAW.STAGE_CUSTOMERS/customers-10000.csv
+FILE_FORMAT = (
+    TYPE = 'CSV',
+    FIELD_DELIMITER = ',',
+    SKIP_HEADER = 1,
+    FIELD_OPTIONALLY_ENCLOSED_BY = '"'
+);
+
+
+---- Validate that the data looks good
+SELECT * FROM DB_DEV.RAW.CUSTOMERS
+LIMIT 20;
