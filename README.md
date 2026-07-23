@@ -1,2 +1,2 @@
 # snowflake-learning-roadmap
-This repo is used to document the learning process for learning snowflake and DBT for professional use
+Documentation of my progress studying snowflake as a Data Engineer
